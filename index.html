@@ -7,229 +7,228 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0c;
-      --surface: #111116;
-      --border: rgba(255,255,255,0.07);
-      --text: #ececec;
-      --muted: #555560;
-      --dim: #333338;
+      --bg: #f5f0e8;
+      --surface: #ede8de;
+      --border: rgba(0,0,0,0.1);
+      --text: #1a1714;
+      --muted: #8a8278;
+      --dim: #ccc7bc;
     }
 
     html, body {
       height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Mono', monospace;
-      overflow-x: hidden;
+      font-family: 'Jost', sans-serif;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ── NOISE TEXTURE ── */
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 128px 128px;
-    }
-
-    /* ── HEADER ── */
     header {
-      padding: 40px 48px 28px;
+      padding: 40px 48px 32px;
       border-bottom: 1px solid var(--border);
       display: flex;
-      align-items: baseline;
-      gap: 20px;
+      align-items: flex-end;
+      justify-content: space-between;
     }
 
     header h1 {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(28px, 3.5vw, 44px);
-      font-weight: 400;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 300;
       letter-spacing: -0.02em;
-      color: var(--text);
       line-height: 1;
+      color: var(--text);
     }
 
     header h1 em {
       font-style: italic;
-      color: #888;
+      color: var(--muted);
     }
 
-    .header-meta {
-      font-size: 11px;
+    .header-right { text-align: right; }
+
+    .live-time {
+      font-size: 13px;
+      font-weight: 300;
       color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .header-sub {
+      font-size: 10px;
+      color: var(--dim);
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-left: auto;
+      margin-top: 4px;
     }
 
-    /* ── GRID ── */
+    /* 5 equal columns — no orphan */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border-top: none;
-      padding: 0;
+      grid-template-columns: repeat(5, 1fr);
+      border-bottom: 1px solid var(--border);
+      flex: 1;
     }
 
-    /* ── CARD ── */
+    @media (max-width: 1050px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 680px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 420px)  { .grid { grid-template-columns: 1fr; } }
+
     .card {
-      background: var(--bg);
-      padding: 36px 32px 32px;
+      padding: 32px 26px 28px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: background 0.2s ease;
-      min-height: 260px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      min-height: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: background 0.22s ease;
+      background: var(--bg);
     }
 
-    .card::before {
+    /* Remove double-border on last in each row */
+    .card:nth-child(5n) { border-right: none; }
+
+    .card:hover { background: #ede8de; }
+
+    .card::after {
       content: "";
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--accent);
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-dark);
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
     }
 
-    .card:hover::before { transform: scaleX(1); }
+    .card:hover::after { transform: scaleX(1); }
 
-    .card:hover {
-      background: #0f0f14;
-    }
-
-    .card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
-
-    .exam-label {
+    .exam-tag {
       font-size: 10px;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 6px;
+      color: var(--accent-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exam-tag::before {
+      content: "";
+      width: 16px;
+      height: 1px;
+      background: var(--accent-dark);
+      display: inline-block;
     }
 
     .exam-name {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(20px, 2.5vw, 26px);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18px, 2vw, 26px);
       font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
       color: var(--text);
     }
 
     .exam-date {
       font-size: 11px;
+      font-weight: 300;
       color: var(--muted);
       margin-top: 8px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.03em;
     }
 
-    .expand-icon {
-      width: 28px;
-      height: 28px;
+    .expand-btn {
+      position: absolute;
+      top: 20px; right: 20px;
+      width: 26px; height: 26px;
       border: 1px solid var(--dim);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      margin-left: 16px;
-      margin-top: 2px;
-      transition: border-color 0.2s, background 0.2s;
+      color: var(--muted);
+      transition: all 0.2s;
     }
 
-    .card:hover .expand-icon {
-      border-color: var(--accent);
-      background: color-mix(in srgb, var(--accent) 12%, transparent);
+    .card:hover .expand-btn {
+      border-color: var(--accent-dark);
+      color: var(--accent-dark);
     }
 
-    .expand-icon svg { width: 12px; height: 12px; }
+    .expand-btn svg { width: 10px; height: 10px; }
 
-    /* ── COUNTDOWN DISPLAY (CARD) ── */
     .countdown-row {
       display: flex;
-      gap: 0;
       align-items: flex-end;
     }
 
     .unit {
       flex: 1;
       text-align: center;
-      padding: 0 4px;
       position: relative;
     }
 
     .unit:not(:last-child)::after {
       content: ":";
       position: absolute;
-      right: -4px;
-      top: 0;
-      bottom: 10px;
+      right: -3px; top: 0; bottom: 14px;
       display: flex;
       align-items: center;
+      font-size: 18px;
+      font-weight: 300;
       color: var(--dim);
-      font-size: 22px;
     }
 
     .unit-val {
-      font-size: clamp(30px, 4vw, 40px);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 3vw, 38px);
       font-weight: 300;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       line-height: 1;
       color: var(--text);
       display: block;
       font-variant-numeric: tabular-nums;
-      transition: color 0.3s;
+      transition: color 0.22s;
     }
 
-    .card:hover .unit-val { color: var(--accent); }
+    .card:hover .unit-val { color: var(--accent-dark); }
 
     .unit-lbl {
-      font-size: 9px;
-      letter-spacing: 0.12em;
+      font-size: 8px;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-top: 6px;
+      margin-top: 5px;
       display: block;
     }
 
-    /* Progress bar */
     .progress-bar {
-      margin-top: 24px;
-      height: 2px;
+      margin-top: 18px;
+      height: 1px;
       background: var(--dim);
-      border-radius: 2px;
       overflow: hidden;
     }
 
     .progress-fill {
       height: 100%;
-      background: var(--accent);
+      background: var(--accent-dark);
       transition: width 1s linear;
-      border-radius: 2px;
     }
 
-    /* ── EXPANDED / FULLSCREEN ── */
+    /* ── OVERLAY ── */
     .overlay {
       position: fixed;
       inset: 0;
@@ -241,16 +240,11 @@
       padding: 40px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease;
-      overflow: hidden;
+      transition: opacity 0.38s ease;
     }
 
-    .overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .overlay.open { opacity: 1; pointer-events: all; }
 
-    /* Animated background for overlay */
     .overlay-bg {
       position: absolute;
       inset: 0;
@@ -259,130 +253,110 @@
 
     .overlay-glow {
       position: absolute;
-      width: 600px;
-      height: 600px;
+      width: 700px; height: 700px;
       border-radius: 50%;
-      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: breathe 4s ease-in-out infinite;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 65%);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      animation: breathe 5s ease-in-out infinite;
       pointer-events: none;
     }
 
     @keyframes breathe {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-      50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
+      50%      { transform: translate(-50%,-50%) scale(1.12); opacity: 0.9; }
     }
 
     .overlay-close {
       position: absolute;
-      top: 32px;
-      right: 36px;
+      top: 32px; right: 36px;
       background: none;
       border: 1px solid var(--dim);
       color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      padding: 10px 18px;
+      font-family: 'Jost', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 10px 20px;
       cursor: pointer;
       transition: all 0.2s;
       z-index: 10;
     }
 
-    .overlay-close:hover {
-      border-color: var(--text);
-      color: var(--text);
-    }
+    .overlay-close:hover { border-color: var(--text); color: var(--text); }
 
     .overlay-content {
       position: relative;
       z-index: 5;
       text-align: center;
       width: 100%;
-      max-width: 900px;
+      max-width: 860px;
     }
+
+    .ov-anim { opacity: 0; transform: translateY(14px); transition: opacity 0.42s ease, transform 0.42s ease; }
+    .overlay.open .ov-anim { opacity: 1; transform: none; }
+    .ov-anim:nth-child(1) { transition-delay: 0.04s; }
+    .ov-anim:nth-child(2) { transition-delay: 0.1s; }
+    .ov-anim:nth-child(3) { transition-delay: 0.15s; }
+    .ov-anim:nth-child(4) { transition-delay: 0.2s; }
+    .ov-anim:nth-child(5) { transition-delay: 0.28s; }
 
     .overlay-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
+      font-size: 10px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: all 0.45s ease 0.05s;
-    }
-
-    .overlay.open .overlay-label {
-      opacity: 1;
-      transform: none;
+      color: var(--accent-dark);
+      margin-bottom: 14px;
     }
 
     .overlay-title {
-      font-family: 'Instrument Serif', serif;
-      font-size: clamp(36px, 7vw, 88px);
-      font-weight: 400;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 8vw, 100px);
+      font-weight: 300;
       letter-spacing: -0.03em;
       line-height: 0.95;
       margin-bottom: 16px;
       color: var(--text);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.45s ease 0.1s;
     }
-
-    .overlay.open .overlay-title { opacity: 1; transform: none; }
 
     .overlay-date {
       font-size: 13px;
+      font-weight: 300;
       color: var(--muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 60px;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: all 0.45s ease 0.15s;
+      letter-spacing: 0.05em;
+      margin-bottom: 52px;
     }
 
-    .overlay.open .overlay-date { opacity: 1; transform: none; }
-
-    /* Big countdown */
     .big-countdown {
       display: flex;
-      gap: 0;
       justify-content: center;
       align-items: flex-end;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: all 0.5s ease 0.2s;
     }
-
-    .overlay.open .big-countdown { opacity: 1; transform: none; }
 
     .big-unit {
       position: relative;
-      padding: 0 28px;
+      padding: 0 22px;
       text-align: center;
     }
 
     .big-unit:not(:last-child)::after {
       content: ":";
       position: absolute;
-      right: -4px;
-      top: 0;
-      bottom: 24px;
+      right: -5px; top: 0; bottom: 24px;
       display: flex;
       align-items: center;
-      color: var(--dim);
-      font-size: clamp(28px, 5vw, 56px);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 5vw, 60px);
       font-weight: 300;
+      color: var(--dim);
     }
 
     .big-val {
-      font-size: clamp(56px, 10vw, 128px);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(58px, 11vw, 132px);
       font-weight: 300;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       line-height: 1;
       color: var(--text);
       display: block;
@@ -390,168 +364,191 @@
     }
 
     .big-lbl {
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-top: 12px;
+      margin-top: 10px;
       display: block;
     }
 
-    /* Progress section */
-    .overlay-progress {
-      margin-top: 60px;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: all 0.5s ease 0.3s;
-    }
-
-    .overlay.open .overlay-progress { opacity: 1; transform: none; }
+    .overlay-progress { margin-top: 52px; }
 
     .progress-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .progress-pct {
-      font-size: 28px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
       font-weight: 300;
-      letter-spacing: -0.04em;
-      color: var(--accent);
+      letter-spacing: -0.03em;
+      color: var(--accent-dark);
+      line-height: 1;
     }
 
     .big-progress-bar {
-      height: 3px;
+      height: 1px;
       background: var(--dim);
-      border-radius: 3px;
-      overflow: hidden;
-      max-width: 600px;
+      max-width: 540px;
       margin: 0 auto;
+      overflow: hidden;
     }
 
     .big-progress-fill {
       height: 100%;
-      background: var(--accent);
+      background: var(--accent-dark);
       transition: width 1s linear;
-      border-radius: 3px;
     }
 
     .seconds-note {
-      margin-top: 20px;
+      margin-top: 14px;
       font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      opacity: 0;
-      transition: opacity 0.5s ease 0.35s;
+      font-weight: 300;
+      color: var(--dim);
+      letter-spacing: 0.06em;
     }
 
-    .overlay.open .seconds-note { opacity: 1; }
+    /* ── COLORS ── */
+    .card[data-id="precalc"]  { --accent: #e8c99a; --accent-dark: #9a6830; background: #fdf6ec; }
+    .card[data-id="cogopo"]   { --accent: #a8d4a0; --accent-dark: #357a2d; background: #f0f9ee; }
+    .card[data-id="apush"]    { --accent: #e0a8a8; --accent-dark: #8a2e2e; background: #fdf0f0; }
+    .card[data-id="englang"]  { --accent: #a8b8e0; --accent-dark: #2e3e82; background: #f0f3fc; }
+    .card[data-id="physics"]  { --accent: #ceb0e0; --accent-dark: #5e2e88; background: #f7f0fc; }
 
-    /* ── COLORS PER EXAM ── */
-    .card[data-id="precalc"] { --accent: #7dd3fc; }
-    .card[data-id="cocopo"]  { --accent: #86efac; }
-    .card[data-id="apush"]   { --accent: #fca5a5; }
-    .card[data-id="englang"] { --accent: #fde68a; }
-    .card[data-id="physics"] { --accent: #c4b5fd; }
+    .card:hover { filter: brightness(0.97); }
 
-    .overlay[data-id="precalc"] { --accent: #7dd3fc; }
-    .overlay[data-id="cocopo"]  { --accent: #86efac; }
-    .overlay[data-id="apush"]   { --accent: #fca5a5; }
-    .overlay[data-id="englang"] { --accent: #fde68a; }
-    .overlay[data-id="physics"] { --accent: #c4b5fd; }
+    .overlay[data-id="precalc"] { --accent: #e8c99a; --accent-dark: #9a6830; }
+    .overlay[data-id="cogopo"]  { --accent: #a8d4a0; --accent-dark: #357a2d; }
+    .overlay[data-id="apush"]   { --accent: #e0a8a8; --accent-dark: #8a2e2e; }
+    .overlay[data-id="englang"] { --accent: #a8b8e0; --accent-dark: #2e3e82; }
+    .overlay[data-id="physics"] { --accent: #ceb0e0; --accent-dark: #5e2e88; }
 
-    /* Divider */
-    .grid-wrap {
-      border-bottom: 1px solid var(--border);
-    }
+    .overlay[data-id="precalc"] .overlay-bg { background: #fdf6ec; }
+    .overlay[data-id="cogopo"]  .overlay-bg { background: #f0f9ee; }
+    .overlay[data-id="apush"]   .overlay-bg { background: #fdf0f0; }
+    .overlay[data-id="englang"] .overlay-bg { background: #f0f3fc; }
+    .overlay[data-id="physics"] .overlay-bg { background: #f7f0fc; }
 
-    .footer {
-      padding: 20px 48px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    footer {
+      padding: 18px 48px;
       font-size: 10px;
+      font-weight: 300;
       color: var(--muted);
       letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex;
+      gap: 16px;
     }
 
-    .footer span { color: var(--dim); }
-
-    /* Pulse on second tick */
     @keyframes tickPulse {
       0% { opacity: 1; }
-      15% { opacity: 0.5; }
-      30% { opacity: 1; }
+      20% { opacity: 0.35; }
+      40% { opacity: 1; }
     }
+    .ticking { animation: tickPulse 0.26s ease; }
 
-    .ticking { animation: tickPulse 0.3s ease; }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      header { padding: 28px 20px 20px; }
-      .card { padding: 24px 20px 20px; min-height: 220px; }
-      .big-unit { padding: 0 16px; }
-      .footer { padding: 16px 20px; }
-      .overlay { padding: 24px 16px; }
-      .overlay-close { top: 20px; right: 20px; padding: 8px 14px; }
+      header { padding: 24px 20px 20px; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .card { padding: 20px 16px 18px; min-height: 200px; }
+      footer { padding: 14px 20px; }
+      .overlay { padding: 20px 12px; }
+      .overlay-close { top: 14px; right: 14px; padding: 8px 14px; }
+      .big-unit { padding: 0 10px; }
     }
+
+    /* ── PIE CHART ── */
+    .pie-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      width: 180px;
+      height: 180px;
+      flex-shrink: 0;
+    }
+
+    .pie-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pie-center {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .pie-pct {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .pie-lbl {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
   </style>
 </head>
 <body>
 
   <header>
-    <div>
-      <h1>AP Exams <em>2026</em></h1>
+    <h1>AP Exams <em>2026</em></h1>
+    <div class="header-right">
+      <div class="live-time" id="live-time">——</div>
+      <div class="header-sub">Eastern Time</div>
     </div>
-    <div class="header-meta" id="live-time">——</div>
   </header>
 
-  <div class="grid-wrap">
-    <div class="grid" id="card-grid"></div>
-  </div>
+  <div class="grid" id="card-grid"></div>
 
-  <div class="footer">
-    <span>↑</span> click any exam to expand &nbsp;·&nbsp; all times 8:00 AM local
-  </div>
+  <footer>
+    <span>↗</span> click any exam to expand &nbsp;·&nbsp; all times EST
+  </footer>
 
-  <!-- OVERLAY -->
   <div class="overlay" id="overlay" data-id="">
     <div class="overlay-bg"></div>
     <div class="overlay-glow"></div>
-    <button class="overlay-close" id="overlay-close">ESC / CLOSE</button>
+    <button class="overlay-close" id="overlay-close">Esc · Close</button>
     <div class="overlay-content">
-      <div class="overlay-label" id="ov-label">—</div>
-      <div class="overlay-title" id="ov-title">—</div>
-      <div class="overlay-date" id="ov-date">—</div>
-      <div class="big-countdown">
-        <div class="big-unit">
-          <span class="big-val" id="ov-d">00</span>
-          <span class="big-lbl">days</span>
-        </div>
-        <div class="big-unit">
-          <span class="big-val" id="ov-h">00</span>
-          <span class="big-lbl">hours</span>
-        </div>
-        <div class="big-unit">
-          <span class="big-val" id="ov-m">00</span>
-          <span class="big-lbl">min</span>
-        </div>
-        <div class="big-unit">
-          <span class="big-val" id="ov-s">00</span>
-          <span class="big-lbl">sec</span>
-        </div>
+      <div class="overlay-label ov-anim" id="ov-label">—</div>
+      <div class="overlay-title ov-anim" id="ov-title">—</div>
+      <div class="overlay-date ov-anim" id="ov-date">—</div>
+      <div class="big-countdown ov-anim">
+        <div class="big-unit"><span class="big-val" id="ov-d">00</span><span class="big-lbl">days</span></div>
+        <div class="big-unit"><span class="big-val" id="ov-h">00</span><span class="big-lbl">hours</span></div>
+        <div class="big-unit"><span class="big-val" id="ov-m">00</span><span class="big-lbl">min</span></div>
+        <div class="big-unit"><span class="big-val" id="ov-s">00</span><span class="big-lbl">sec</span></div>
       </div>
-      <div class="overlay-progress">
+      <div class="overlay-progress ov-anim">
         <div class="progress-meta">
-          <span>time elapsed</span>
+          <span>elapsed</span>
           <span class="progress-pct" id="ov-pct">0%</span>
-          <span>time remaining</span>
+          <span>remaining</span>
         </div>
         <div class="big-progress-bar">
           <div class="big-progress-fill" id="ov-fill" style="width:0%"></div>
@@ -562,213 +559,187 @@
   </div>
 
 <script>
-  // ── EXAM DATA ──────────────────────────────────────────────────────
   const EXAMS = [
-    {
-      id: "precalc",
-      label: "AP Precalculus",
-      short: "Precalc",
-      date: new Date("2026-05-05T08:00:00"),
-      desc: "Tuesday, May 5, 2026 · 8:00 AM"
-    },
-    {
-      id: "cocopo",
-      label: "AP Comparative Gov & Politics",
-      short: "CoCoPo",
-      date: new Date("2026-05-07T08:00:00"),
-      desc: "Thursday, May 7, 2026 · 8:00 AM"
-    },
-    {
-      id: "apush",
-      label: "AP United States History",
-      short: "APUSH",
-      date: new Date("2026-05-08T08:00:00"),
-      desc: "Friday, May 8, 2026 · 8:00 AM"
-    },
-    {
-      id: "englang",
-      label: "AP English Language",
-      short: "English Lang",
-      date: new Date("2026-05-13T08:00:00"),
-      desc: "Wednesday, May 13, 2026 · 8:00 AM"
-    },
-    {
-      id: "physics",
-      label: "AP Physics",
-      short: "Physics",
-      date: new Date("2026-05-12T08:00:00"),
-      desc: "Tuesday, May 12, 2026 · 8:00 AM"
-    },
+    { id:"cogopo",  label:"AP Comparative Gov & Politics", short:"CoGoPo",     date:new Date("2026-05-06T12:00:00-04:00"), desc:"Wednesday, May 6, 2026 · 12:00 PM EST" },
+    { id:"physics", label:"AP Physics",                    short:"Physics",     date:new Date("2026-05-06T12:00:00-04:00"), desc:"Wednesday, May 6, 2026 · 12:00 PM EST" },
+    { id:"apush",   label:"AP United States History",      short:"APUSH",       date:new Date("2026-05-08T08:00:00-04:00"), desc:"Friday, May 8, 2026 · 8:00 AM EST"     },
+    { id:"precalc", label:"AP Precalculus",                short:"Precalc",     date:new Date("2026-05-12T08:00:00-04:00"), desc:"Tuesday, May 12, 2026 · 8:00 AM EST"   },
+    { id:"englang", label:"AP English Language",           short:"English Lang",date:new Date("2026-05-13T08:00:00-04:00"), desc:"Wednesday, May 13, 2026 · 8:00 AM EST" },
   ];
 
-  // Sort by date
-  EXAMS.sort((a, b) => a.date - b.date);
+  EXAMS.sort((a,b) => a.date - b.date);
 
-  // Reference start (Jan 1 2026) for progress bar
-  const SEMESTER_START = new Date("2026-04-01T00:00:00");
+  const START = new Date("2026-04-01T00:00:00-04:00");
 
-  // ── HELPERS ───────────────────────────────────────────────────────
-  function pad(n) { return String(n).padStart(2, "0"); }
+  const pad = n => String(n).padStart(2,"0");
 
-  function getDelta(target) {
-    const diff = target - Date.now();
-    if (diff <= 0) return { d:0, h:0, m:0, s:0, total:0 };
-    const s = Math.floor(diff / 1000);
-    return {
-      d: Math.floor(s / 86400),
-      h: Math.floor((s % 86400) / 3600),
-      m: Math.floor((s % 3600) / 60),
-      s: s % 60,
-      total: diff
-    };
+  function getDelta(t) {
+    const diff = t - Date.now();
+    if (diff <= 0) return {d:0,h:0,m:0,s:0,total:0};
+    const s = Math.floor(diff/1000);
+    return { d:Math.floor(s/86400), h:Math.floor((s%86400)/3600), m:Math.floor((s%3600)/60), s:s%60, total:diff };
   }
 
-  function getProgress(exam) {
-    const now = Date.now();
-    const start = SEMESTER_START.getTime();
-    const end = exam.date.getTime();
-    const pct = Math.min(100, Math.max(0, ((now - start) / (end - start)) * 100));
-    return pct;
+  function getPct(exam) {
+    return Math.min(100, Math.max(0, (Date.now()-START) / (exam.date-START) * 100));
   }
 
-  // ── BUILD CARDS ───────────────────────────────────────────────────
+  // Build cards
   const grid = document.getElementById("card-grid");
-
   EXAMS.forEach(exam => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.id = exam.id;
-
-    card.innerHTML = `
-      <div class="card-top">
-        <div>
-          <div class="exam-label">${exam.short}</div>
-          <div class="exam-name">${exam.label}</div>
-          <div class="exam-date">${exam.desc}</div>
-        </div>
-        <div class="expand-icon">
-          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M2 10L10 2M6 2h4v4"/>
-          </svg>
+    const el = document.createElement("div");
+    el.className = "card";
+    el.dataset.id = exam.id;
+    el.innerHTML = `
+      <div>
+        <div class="exam-tag">${exam.short}</div>
+        <div class="exam-name">${exam.label}</div>
+        <div class="exam-date">${exam.desc}</div>
+      </div>
+      <div class="expand-btn">
+        <svg viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 9L9 2M5.5 2H9v3.5"/>
+        </svg>
+      </div>
+      <div class="pie-wrap">
+        <canvas class="pie-canvas" width="180" height="180"></canvas>
+        <div class="pie-center">
+          <span class="pie-pct">0%</span>
+          <span class="pie-lbl">elapsed</span>
         </div>
       </div>
       <div>
         <div class="countdown-row">
-          <div class="unit">
-            <span class="unit-val" data-field="d">--</span>
-            <span class="unit-lbl">days</span>
-          </div>
-          <div class="unit">
-            <span class="unit-val" data-field="h">--</span>
-            <span class="unit-lbl">hrs</span>
-          </div>
-          <div class="unit">
-            <span class="unit-val" data-field="m">--</span>
-            <span class="unit-lbl">min</span>
-          </div>
-          <div class="unit">
-            <span class="unit-val" data-field="s">--</span>
-            <span class="unit-lbl">sec</span>
-          </div>
+          <div class="unit"><span class="unit-val" data-f="d">--</span><span class="unit-lbl">days</span></div>
+          <div class="unit"><span class="unit-val" data-f="h">--</span><span class="unit-lbl">hrs</span></div>
+          <div class="unit"><span class="unit-val" data-f="m">--</span><span class="unit-lbl">min</span></div>
+          <div class="unit"><span class="unit-val" data-f="s">--</span><span class="unit-lbl">sec</span></div>
         </div>
-        <div class="progress-bar" style="margin-top:20px">
-          <div class="progress-fill" style="width:0%"></div>
-        </div>
-      </div>
-    `;
-
-    card.addEventListener("click", () => openOverlay(exam));
-    grid.appendChild(card);
+      </div>`;
+    el.addEventListener("click", () => openOverlay(exam));
+    grid.appendChild(el);
   });
 
-  // ── OVERLAY ───────────────────────────────────────────────────────
-  const overlay     = document.getElementById("overlay");
-  const ovClose     = document.getElementById("overlay-close");
-  const ovLabel     = document.getElementById("ov-label");
-  const ovTitle     = document.getElementById("ov-title");
-  const ovDate      = document.getElementById("ov-date");
-  const ovD         = document.getElementById("ov-d");
-  const ovH         = document.getElementById("ov-h");
-  const ovM         = document.getElementById("ov-m");
-  const ovS         = document.getElementById("ov-s");
-  const ovPct       = document.getElementById("ov-pct");
-  const ovFill      = document.getElementById("ov-fill");
-  const ovSecs      = document.getElementById("ov-secs");
-
-  let activeExam = null;
+  // Overlay
+  const overlay = document.getElementById("overlay");
+  let active = null;
 
   function openOverlay(exam) {
-    activeExam = exam;
+    active = exam;
     overlay.dataset.id = exam.id;
-    ovLabel.textContent = exam.short.toUpperCase();
-    ovTitle.textContent = exam.label;
-    ovDate.textContent  = exam.desc;
+    document.getElementById("ov-label").textContent = exam.short.toUpperCase();
+    document.getElementById("ov-title").textContent = exam.label;
+    document.getElementById("ov-date").textContent  = exam.desc;
     overlay.classList.add("open");
     document.body.style.overflow = "hidden";
-    updateOverlay();
+    updateOv();
   }
 
   function closeOverlay() {
     overlay.classList.remove("open");
     document.body.style.overflow = "";
-    setTimeout(() => { activeExam = null; }, 400);
+    setTimeout(() => active = null, 400);
   }
 
-  ovClose.addEventListener("click", closeOverlay);
-  overlay.addEventListener("click", e => {
-    if (e.target === overlay || e.target.classList.contains("overlay-bg")) closeOverlay();
-  });
+  document.getElementById("overlay-close").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", e => { if (e.target===overlay || e.target.classList.contains("overlay-bg")) closeOverlay(); });
+  document.addEventListener("keydown", e => { if (e.key==="Escape") closeOverlay(); });
 
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") closeOverlay();
-  });
-
-  function updateOverlay() {
-    if (!activeExam) return;
-    const { d, h, m, s, total } = getDelta(activeExam.date);
-    ovD.textContent = pad(d);
-    ovH.textContent = pad(h);
-    ovM.textContent = pad(m);
-    ovS.textContent = pad(s);
-
-    const pct = getProgress(activeExam);
-    ovPct.textContent  = pct.toFixed(1) + "%";
-    ovFill.style.width = pct + "%";
-
-    const totalSecs = Math.floor(total / 1000);
-    ovSecs.textContent = `${totalSecs.toLocaleString()} seconds remaining`;
+  function updateOv() {
+    if (!active) return;
+    const {d,h,m,s,total} = getDelta(active.date);
+    document.getElementById("ov-d").textContent = pad(d);
+    document.getElementById("ov-h").textContent = pad(h);
+    document.getElementById("ov-m").textContent = pad(m);
+    document.getElementById("ov-s").textContent = pad(s);
+    const pct = getPct(active);
+    document.getElementById("ov-pct").textContent  = pct.toFixed(1)+"%";
+    document.getElementById("ov-fill").style.width = pct+"%";
+    document.getElementById("ov-secs").textContent = `${Math.floor(total/1000).toLocaleString()} seconds remaining`;
   }
 
-  // ── TICK ──────────────────────────────────────────────────────────
+
+  // ── PIE CHART DRAWING ──────────────────────────────────────────────
+  const ACCENT_COLORS = {
+    cogopo:  { fill: '#a8d4a0', track: '#d8eed5' },
+    physics: { fill: '#ceb0e0', track: '#eddff5' },
+    apush:   { fill: '#e0a8a8', track: '#f5dada' },
+    precalc: { fill: '#e8c99a', track: '#f7e8ce' },
+    englang: { fill: '#a8b8e0', track: '#d8dff5' },
+  };
+
+  function drawPie(canvas, pct, examId) {
+    const dpr = window.devicePixelRatio || 1;
+    const size = 180;
+    if (canvas.width !== size * dpr) {
+      canvas.width  = size * dpr;
+      canvas.height = size * dpr;
+      canvas.style.width  = size + 'px';
+      canvas.style.height = size + 'px';
+    }
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const r  = cx * 0.78;
+    const sw = cx * 0.18;
+    const colors = ACCENT_COLORS[examId] || { fill: '#aaa', track: '#ddd' };
+    const startAngle = -Math.PI / 2;
+    const filled = (pct / 100) * 2 * Math.PI;
+
+    // Track
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = colors.track;
+    ctx.lineWidth = sw;
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+
+    // Filled arc
+    if (pct > 0) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, startAngle, startAngle + filled);
+      ctx.strokeStyle = colors.fill;
+      ctx.lineWidth = sw;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    // Dot at tip
+    if (pct > 1 && pct < 99) {
+      const tipAngle = startAngle + filled;
+      const tx = cx + r * Math.cos(tipAngle);
+      const ty = cy + r * Math.sin(tipAngle);
+      ctx.beginPath();
+      ctx.arc(tx, ty, sw * 0.45, 0, 2 * Math.PI);
+      ctx.fillStyle = colors.fill;
+      ctx.fill();
+    }
+  }
+
   function tick() {
-    const now = new Date();
-
-    // Update live time
     document.getElementById("live-time").textContent =
-      now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York",hour:"2-digit",minute:"2-digit",second:"2-digit"});
 
-    // Update each card
     EXAMS.forEach(exam => {
       const card = document.querySelector(`.card[data-id="${exam.id}"]`);
       if (!card) return;
-      const { d, h, m, s } = getDelta(exam.date);
-
-      card.querySelector('[data-field="d"]').textContent = pad(d);
-      card.querySelector('[data-field="h"]').textContent = pad(h);
-      card.querySelector('[data-field="m"]').textContent = pad(m);
-
-      const secEl = card.querySelector('[data-field="s"]');
-      secEl.textContent = pad(s);
-      secEl.classList.remove("ticking");
-      void secEl.offsetWidth; // reflow to restart animation
-      secEl.classList.add("ticking");
-
-      const pct = getProgress(exam);
-      card.querySelector(".progress-fill").style.width = pct + "%";
+      const {d,h,m,s} = getDelta(exam.date);
+      card.querySelector('[data-f="d"]').textContent = pad(d);
+      card.querySelector('[data-f="h"]').textContent = pad(h);
+      card.querySelector('[data-f="m"]').textContent = pad(m);
+      const se = card.querySelector('[data-f="s"]');
+      se.textContent = pad(s);
+      se.classList.remove("ticking");
+      void se.offsetWidth;
+      se.classList.add("ticking");
+      const pct = getPct(exam);
+      const canvas = card.querySelector('.pie-canvas');
+      if (canvas) drawPie(canvas, pct, exam.id);
+      const piePct = card.querySelector('.pie-pct');
+      if (piePct) piePct.textContent = pct.toFixed(1) + '%';
     });
-
-    // Update overlay
-    updateOverlay();
+    updateOv();
   }
 
   tick();
